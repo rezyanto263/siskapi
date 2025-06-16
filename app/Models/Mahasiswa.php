@@ -13,7 +13,7 @@ class Mahasiswa extends Model
     public $incrementing = false;
     public $timestamps = true;
 
-     protected $fillable = [
+    protected $fillable = [
         'user_id',
         'nim',
         'telepon',
