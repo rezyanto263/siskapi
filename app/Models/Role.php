@@ -17,7 +17,7 @@ class Role extends Model
 
     public const MAHASISWA = 'Mahasiswa';
     public const KEPALA_PRODI = 'Kepala Prodi';
-    public const BAKK = 'BAAK';
+    public const BAAK = 'BAAK';
     public const UPAPKK = 'UPAPKK';
 
     protected $fillable = [
@@ -27,5 +27,10 @@ class Role extends Model
     public function users(): HasMany
     {
         return $this->hasMany(User::class, 'role_id', 'id');
+    }
+
+    public static function getId(string $name): string
+    {
+        return self::where('nama', $name)->first()->id;
     }
 }

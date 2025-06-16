@@ -24,6 +24,7 @@ class UserServiceTest extends TestCase
     {
         parent::setUp();
 
+        DB::delete('DELETE FROM password_reset_tokens');
         DB::delete('DELETE FROM users');
         DB::delete('DELETE FROM kepala_prodi');
         DB::delete('DELETE FROM roles');
@@ -38,7 +39,7 @@ class UserServiceTest extends TestCase
         $this->seed([JurusanSeeder::class, ProdiSeeder::class, RoleSeeder::class, KepalaProdiSeeder::class]);
         $success = Auth::attempt([
             'username' => '123456789012345678',
-            'password' => 'testkaprodi'
+            'password' => 'testkaprodi123'
         ]);
         self::assertTrue($success);
     }
@@ -58,7 +59,7 @@ class UserServiceTest extends TestCase
             'nip' => '123456789012345678',
             'nidn' => '1234567890',
             'email' => 'testkaprodi@example.com',
-            'password' => 'testkaprodi',
+            'password' => 'testkaprodi123',
             'angkatan' => '20222',
             'prodi_id' => '58302',
             'role_id' => $role_id,

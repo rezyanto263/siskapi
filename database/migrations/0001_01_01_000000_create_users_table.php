@@ -37,6 +37,15 @@ return new class extends Migration {
             $table->timestamp('created_at')->nullable();
         });
 
+        Schema::create('registration_tokens', function (Blueprint $table) {
+            $table->string('username', 18)->primary();
+            $table->string('email')->nullable()->unique();
+            $table->string('type', 20);
+            $table->string('token', 64)->unique();
+            $table->timestamp('expires_at')->nullable();
+            $table->timestamp('created_at')->nullable();
+        });
+
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->char('user_id', 36)->nullable()->index();

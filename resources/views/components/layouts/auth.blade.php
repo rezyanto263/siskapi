@@ -7,6 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ $title }}</title>
     <link rel="icon" href="{{ asset('/storage/pictures/logo.png') }}">
+    @if ($icon ?? false)
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    @endif
     @vite('resources/css/app.css')
 </head>
 
@@ -14,7 +17,7 @@
     <main class="bg-cover bg-center min-h-screen min-w-full"
         style="background-image: url({{ asset('storage/pictures/authbg.png') }})">
         <div
-            class="container flex flex-col min-h-screen w-full py-8 max-w-full mx-auto backdrop-blur-sm backdrop-brightness-[.3]">
+            class="container flex flex-col min-h-screen w-full py-8 max-w-full mx-auto backdrop-blur-sm bg-black/70">
             <div class="my-auto mx-6">
                 <h1 class="text-5xl text-center font-bold text-sky-600 tracking-[0.8rem] drop-shadow-2xl mb-3">
                     SISKAPI

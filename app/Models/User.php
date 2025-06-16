@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -38,7 +39,7 @@ class User extends Authenticatable implements CanResetPassword
         'username',
         'email',
         'password',
-        'role_id'
+        'role_id',
     ];
 
     /**
@@ -87,5 +88,10 @@ class User extends Authenticatable implements CanResetPassword
     public function upapkk(): HasOne
     {
         return $this->hasOne(Upapkk::class, 'user_id', 'id');
+    }
+
+    public function sendPasswordResetNotification(#[\SensitiveParameter] $token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 }

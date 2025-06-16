@@ -176,7 +176,7 @@ return [
 
     'custom' => [
         'username' => [
-            'username' => 'Silakan gunakan :attribute Anda untuk masuk.',
+            'username' => 'Kolom :attribute tidak valid.',
         ],
     ],
 
@@ -192,7 +192,7 @@ return [
     */
 
     'attributes' => [
-        'username' => 'NIP, NIM, atau email',
+        'username' => 'nama pengguna',
         'password' => 'kata sandi',
         'name' => 'nama'
     ],

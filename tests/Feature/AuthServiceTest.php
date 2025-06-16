@@ -24,6 +24,7 @@ class AuthServiceTest extends TestCase
     {
         parent::setUp();
 
+        DB::delete('DELETE FROM password_reset_tokens');
         DB::delete('DELETE FROM users');
         DB::delete('DELETE FROM kepala_prodi');
         DB::delete('DELETE FROM roles');
@@ -38,8 +39,8 @@ class AuthServiceTest extends TestCase
         $this->seed([JurusanSeeder::class, ProdiSeeder::class, RoleSeeder::class, KepalaProdiSeeder::class]);
 
         $success = $this->authService->login([
-            'login' => '123456789012345678',
-            'password' => 'testkaprodi'
+            'username' => '123456789012345678',
+            'password' => 'testkaprodi123'
         ]);
 
         self::assertTrue($success);
@@ -54,16 +55,29 @@ class AuthServiceTest extends TestCase
         self::assertNull(Auth::user());
     }
 
+    public function testForgotPasswordKaprodi()
+    {
+        $this->seed([JurusanSeeder::class, ProdiSeeder::class, RoleSeeder::class, KepalaProdiSeeder::class]);
+
+        $email = 'testkaprodi@example.com';
+
+        $status = $this->authService->forgotPassword($email);
+
+        self::assertEquals(__('passwords.sent'), $status);
+    }
+
     public function testAPI()
     {
         $academicYear = ['20221', '20222'];
-        $email = 'ayulestari2563@gmail.com';
+        $email = 'rezyanto263@gmail.com';
 
         // Mahasiswa
-        for ($i = 0; $i < count($academicYear); $i++) {
-            $hashCode = strtoupper(hash('sha256', $academicYear[$i] . config('services.pnb_api.key')));
-            $response = Http::post('https://webapi.pnb.ac.id/api/mahasiswa', [
-                'tahunAkademik' => $academicYear[$i],
+        foreach ($academicYear as $year) {
+            $hashCode = strtoupper(hash('sha256', $year . config('services.pnb_api.key')));
+            $url = config('services.pnb_api.url') . '/mahasiswa';
+
+            $response = Http::post($url, [
+                'tahunAkademik' => $year,
                 'HashCode' => $hashCode
             ])->collect('daftar');
 
@@ -76,6 +90,6 @@ class AuthServiceTest extends TestCase
 
         Log::info(json_encode($mahasiswa, JSON_PRETTY_PRINT));
 
-        self::assertEquals('2215354045', $mahasiswa['nim']);
+        self::assertEquals('2215354081', $mahasiswa['nim']);
     }
 }

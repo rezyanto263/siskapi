@@ -2,6 +2,11 @@
 
 return [
 
+    'registration_token' => [
+        'length' => (int) env('REGISTRATION_TOKEN_LENGTH', 32),
+        'expire' => (int) env('REGISTRATION_TOKEN_EXPIRE', 60),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults

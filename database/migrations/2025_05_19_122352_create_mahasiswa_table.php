@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('angkatan', 5);
             $table->string('telepon', 20)->nullable();
             $table->string('prodi_id', 5);
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
