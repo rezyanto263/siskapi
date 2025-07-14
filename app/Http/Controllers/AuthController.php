@@ -6,6 +6,7 @@ use App\Exceptions\UserException;
 use App\Http\Requests\Auth\AccountSetupRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\ResetPasswordRequest;
+use App\Models\Role;
 use App\Services\Auth\AuthServiceInterface;
 use App\Exceptions\MailException;
 use App\Http\Requests\Auth\LoginRequest;
@@ -39,7 +40,7 @@ class AuthController extends Controller
             );
 
             return $success
-                ? redirect('/login')->with('status', __('auth.register.verification_required'))
+                ? redirect()->route('login.form')->with('status', __('auth.register.verification_required'))
                 : back()->withErrors(['status' => __('auth.register.verification_failed')]);
         } catch (UserException $e) {
             return back()->withErrors(['status' => $e->getMessage()]);
@@ -51,7 +52,7 @@ class AuthController extends Controller
         $data = $request->only('token', 'username');
         return $data
             ? view('auth.account-setup', $data)
-            : redirect('/login')->withErrors(['status' => __('exceptions.registration_token_invalid')]);
+            : redirect()->route('login.form')->withErrors(['status' => __('auth.register.registration_token_invalid')]);
     }
 
     public function accountSetup(AccountSetupRequest $request)
@@ -65,7 +66,7 @@ class AuthController extends Controller
                 throw new UserException(__('auth.register.error'));
             }
 
-            return redirect('/login')->with('status', __('auth.register.verification_success'));
+            return redirect()->route('login.form')->with('status', __('auth.register.verification_success'));
         } catch (UserException $e) {
             return back()->withErrors(['status' => $e->getMessage()]);
         }
@@ -85,10 +86,10 @@ class AuthController extends Controller
 
             if ($success) {
                 return match (Auth::user()->role->nama) {
-                    'Mahasiswa' => redirect()->intended('/'),
-                    'UPAPKK' => redirect()->intended('/'),
-                    'Kepala Prodi' => redirect()->intended('/'),
-                    'BAAK' => redirect()->intended('/'),
+                    Role::MAHASISWA => redirect()->intended(route('mahasiswa.dashboard')),
+                    Role::KEPALA_PRODI => redirect()->intended(route('kaprodi.dashboard')),
+                    Role::BAAK => redirect()->intended(route('baak.dashboard')),
+                    Role::UPAPKK => redirect()->intended(route('upapkk.dashboard')),
                     default => abort(401, 'Unauthorized')
                 };
             }
@@ -102,7 +103,7 @@ class AuthController extends Controller
     public function logout()
     {
         $this->authService->logout();
-        return redirect('/login');
+        return redirect()->route('login.form');
     }
 
     public function showForgotPasswordForm()
@@ -128,7 +129,7 @@ class AuthController extends Controller
 
         return $data
             ? view('auth.reset-password', $data)
-            : redirect('/login')->withErrors(['status' => __('passwords.token')]);
+            : redirect()->route('login.form')->withErrors(['status' => __('passwords.token')]);
     }
 
     public function resetPassword(ResetPasswordRequest $request)
@@ -137,7 +138,7 @@ class AuthController extends Controller
 
         try {
             $status = $this->authService->resetPassword($data);
-            return redirect('/login')->with('status', $status);
+            return redirect()->route('login.form')->with('status', $status);
         } catch (UserException $e) {
             return back()->withErrors(['status' => $e->getMessage()]);
         }

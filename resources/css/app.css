@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+    scrollbar-color: gray transparent;
+}
+
+[x-cloak] {
+    display: none !important;
+}

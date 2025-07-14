@@ -194,6 +194,7 @@ return [
     'attributes' => [
         'username' => 'nama pengguna',
         'password' => 'kata sandi',
+        'password_confirmation' => 'konfirmasi kata sandi',
         'name' => 'nama'
     ],
 

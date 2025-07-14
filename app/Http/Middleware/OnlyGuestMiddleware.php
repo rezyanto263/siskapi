@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Role;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,10 +19,10 @@ class OnlyGuestMiddleware
     {
         return Auth::check()
             ? match (Auth::user()->role->nama) {
-                'Mahasiswa' => redirect()->intended('/'),
-                'UPAPKK' => redirect()->intended('/'),
-                'Kepala Prodi' => redirect()->intended('/'),
-                'BAAK' => redirect()->intended('/'),
+                Role::MAHASISWA => redirect()->intended(route('mahasiswa.dashboard')),
+                Role::KEPALA_PRODI => redirect()->intended(route('kaprodi.dashboard')),
+                Role::BAAK => redirect()->intended(route('baak.dashboard')),
+                Role::UPAPKK => redirect()->intended(route('upapkk.dashboard')),
                 default => abort(401, 'Unauthorized')
             }
             : $next($request);

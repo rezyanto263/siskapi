@@ -15,19 +15,24 @@ class KepalaProdiSeeder extends Seeder
     public function run(): void
     {
         $role_id = Role::where('nama', Role::KEPALA_PRODI)->value('id');
-        $user = User::create([
-            'nama' => 'Test Kaprodi',
-            'username' => '123456789012345678',
-            'email' => 'testkaprodi@example.com',
-            'password' => 'testkaprodi123',
-            'role_id' => $role_id,
-        ]);
-        $user->kepalaProdi()->create([
-            'nip' => '123456789012345678',
-            'nidn' => '1234567890',
-            'angkatan' => '20222',
-            'prodi_id' => '58302',
-            'is_active' => true,
-        ]);
+        $nip = '000000000000000001';
+        $user = User::updateOrCreate(
+            ['username' => $nip],
+            [
+                'nama' => 'Test Kaprodi',
+                'email' => 'testkaprodi@example.com',
+                'password' => 'testkaprodi123',
+                'role_id' => $role_id,
+            ]
+        );
+        $user->kepalaProdi()->updateOrCreate(
+            ['nip' => $nip],
+            [
+                'nidn' => '1234567890',
+                'angkatan' => '20222',
+                'prodi_id' => '58302',
+                'is_active' => true,
+            ]
+        );
     }
 }

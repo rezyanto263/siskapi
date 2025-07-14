@@ -74,7 +74,7 @@ class AuthService implements AuthServiceInterface
                 ]);
         });
 
-        return url(route('account-setup', [
+        return url(route('account.setup.form', [
             'token' => $token,
             'username' => $user['nim']
         ], false));
@@ -105,7 +105,7 @@ class AuthService implements AuthServiceInterface
                 'created_at' => now(),
             ]);
 
-        return url(route('account-setup', [
+        return url(route('account.setup.form', [
             'token' => $newToken,
             'username' => $user['nip']
         ], false));
@@ -126,6 +126,7 @@ class AuthService implements AuthServiceInterface
         }
 
         $user['email'] = $registration->email;
+        $user['email_verified_at'] = now();
         $user['password'] = $password;
         $user['is_active'] = true;
         $user['role_id'] = Role::getId($registration->type);
@@ -146,14 +147,14 @@ class AuthService implements AuthServiceInterface
     private function validateRegistrationToken(string $token): object
     {
         if (!TokenHelper::validateToken($token)) {
-            throw new UserException(__('exceptions.user.registration_token_invalid'));
+            throw new UserException(__('auth.register.registration_token_invalid'));
         }
 
         $registration = DB::table('registration_tokens')->where('token', $token)->first();
 
         if (!$registration || $registration->expires_at < now()) {
             DB::table('registration_tokens')->where('token', $token)->delete();
-            throw new UserException(__('exceptions.user.registration_token_invalid'));
+            throw new UserException(__('auth.register.registration_token_invalid'));
         }
 
         return $registration;

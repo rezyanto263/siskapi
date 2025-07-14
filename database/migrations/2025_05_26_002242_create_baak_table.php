@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('baak', function (Blueprint $table) {
             $table->char('user_id', 36)->primary();
-            $table->char('nip', 10);
+            $table->char('nip', 18);
             $table->string('telepon', 20)->nullable();
             $table->boolean('is_active')->default(false);
             $table->timestamps();

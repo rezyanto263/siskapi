@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Jurusan;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Http;
 
 class JurusanSeeder extends Seeder
 {
@@ -13,9 +14,17 @@ class JurusanSeeder extends Seeder
      */
     public function run(): void
     {
-        Jurusan::create([
-            'id' => '40',
-            'nama' => 'Teknologi Informasi'
-        ]);
+        $hashCodeJurusan = strtoupper(hash('sha256', config('services.pnb_api.key')));
+
+        $jurusan = Http::post(config('services.pnb_api.url'). '/daftarjurusan', [
+            'HashCode' => $hashCodeJurusan
+        ])->collect('daftar');
+
+        $jurusan->each(function($value) {
+            Jurusan::updateOrCreate(
+                ['id' => $value['kodeJurusan']],
+                ['nama' => $value['namaJurusan']]
+            );
+        });
     }
 }

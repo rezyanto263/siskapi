@@ -9,8 +9,18 @@ export default {
         './resources/**/*.js',
         './resources/**/*.vue',
     ],
+    darkMode: 'class',
     theme: {
         extend: {
+            animation: {
+                shake: 'shake 5s ease-in-out infinite'
+            },
+            keyframes: {
+                shake: {
+                    '0%, 60%, 100%': { transform: 'rotate(0deg)' },
+                    '10%, 50%': { transform: 'rotate(10deg)' },
+                }
+            },
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
